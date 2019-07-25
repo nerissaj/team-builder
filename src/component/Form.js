@@ -1,54 +1,67 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
-const Form = () => {
-    const [member, setMember] = useState({ name: "", email: "" , role:""});
-    
-    const handleChange = event => {
-        setUser({ ...member, [event.target.name]: event.target.value });
-      };
-   
-              
-              const handlePasswordChange = event => {
-                setUser({ ...member, [event.target.name]: event.target.value });
-              };
-    
-    
+
+export default  function Form(props) {
+    const [inputs, setInputs] = useState({});
+  const setter = props.setter;
       
         
    
-          const handleSubmit = event => {
+          const SubmitHandler = event => {
             event.preventDefault();
-            console.log(member.name);
-            console.log(member.email);
-            console.log(member.role);
+            setter(inputs);
           };
-        
+       
     
+        useEffect(() => {
+            if(props.memberToEdit) setInputs(props.memberToEdit);
+          }, [props.memberToEdit]);
+        
+          const updateField = event => {
+            setInputs({...inputs, [event.target.name]: event.target.value});
+          };
       return (
-        <div className="form">
-   {console.log(member)}
-            <form onSubmit={event => handleSubmit(event)}>
+            <form onSubmit={SubmitHandler}>
+            <fieldset>
+         <legend>{props.memberToEdit ? 'Edit Member': 'Sign Up'}</legend>
+            <div>
             <label>
-              name:
-              <input type="text" name="name" value={member.name} onChange={event => handleChange(event)} />
+              Username:
+              <div>
+              <input type={"text"} 
+              name={'username'} 
+              placeholder={'Enter your username'} 
+              value={inputs.username} 
+              onChange={updateField} />
+              </div>
             </label>
+            </div>
+            <div>
             <label>
              Email:
-              <input type="text" name="email" value={member.email} onChange={event => handleChange(event)}
+             <div>
+              <input type={"text"} name={"email"} placeholder={'example.@domain.com'} value={inputs.email} onChange={updateField}
               />
+              </div>
             </label>
+            </div>
+            <div>
             <label>
                 Role:
-                <input type="text"name="role" value={member.role} onChange={event => handleChange(event)} />
+                <div>
+                <input type={'text'}name={'role'} placeholder={'Role'} value={inputs.role} onChange={updateField} />
+                </div>
             </label>
-            <button onSubmit={() => handleSubmit()}>Submit!</button>
-          </form>
-        </div>
+            </div>
+            <button type={'submit'}>Submit!</button>
+            </fieldset>
+            </form>
+       
       );
     
           
       }
-    export default Form;
+    
 
     
 
@@ -59,4 +72,3 @@ const Form = () => {
             
     
     
-}
